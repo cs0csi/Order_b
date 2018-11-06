@@ -67,16 +67,16 @@ private List<Order> orders = new ArrayList<>();
      
                
           for (Order order : orders) {
-               System.out.println(order);                  //kiiratás konzolra a fájlbol beolvasott értékeket
+            //   System.out.println(order);                  //kiiratás konzolra a fájlbol beolvasott értékeket
                 sqlInsertOrders= "INSERT INTO orders (\"OrderId\",\"BuyerName\",\"BuyerEmail\",\"OrderDate\",\"OrderTotalValue\",\"Address\",\"Postcode\")" 
                         +"VALUES ('"+order.getOrderId()+"','"+order.getBuyerName()+"','"+order.getBuyerEmail()+"','"+order.getOrderDate()+"','05','"
                         +order.getAddress()+"','"+order.getPostcode()+"')";
-                System.out.println("    asd ");
                 
               
                  stmt.executeUpdate(sqlInsertOrders);
           }
        
+          // a kettőt lehtne egyesíteni
           
           for (Order order : orders) {
                 sqlInstertOrder_item="INSERT INTO order_item (\"OrderItemId\",\"OrderId\",\"SalePrice\",\"ShippingPrice\",\"TotalItemPrice\",\"SKU\")" 
