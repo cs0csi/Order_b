@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Import;
+package IO;
 
 import OrderClass.Order;
 import java.io.File;
@@ -15,11 +15,11 @@ import java.util.Scanner;
  *
  * @author csocsi
  */
-public class Input implements ImpportInterface{
+public class ImportCSV implements ImpportInterface{
        private File orderFile;
        private final String CHAR_SET = ("UTF-8");
 
-public Input(File orderFile) {
+public ImportCSV(File orderFile) {
         this.orderFile = orderFile;
     }
 public List<Order> orderList() throws Exception {
