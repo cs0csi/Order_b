@@ -30,6 +30,49 @@ private String orderDate;
         this.sku = sku;
         this.orderDate = orderDate;
     }
+public double totalItemPrice(){
+return getSalePrice()+getShippingPrice();
+
+}
+    public int getOrderItemId() {
+        return orderItemId;
+    }
+
+    public double getSalePrice() {
+        return salePrice;
+    }
+
+    public double getShippingPrice() {
+        return shippingPrice;
+    }
+
+    public int getSku() {
+        return sku;
+    }
+
+    public String getBuyerName() {
+        return buyerName;
+    }
+
+    public String getBuyerEmail() {
+        return buyerEmail;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public int getPostcode() {
+        return postcode;
+    }
+
+    public String getOrderDate() {
+        return orderDate;
+    }
+
+    public int getOrderId() {
+        return orderId;
+    }
 
     @Override
     public String toString() {

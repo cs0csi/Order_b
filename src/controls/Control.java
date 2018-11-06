@@ -22,15 +22,9 @@ private final String FILE_SOURCE = "/Csv/input.csv";
 private List<Order> orders = new ArrayList<>();
 
     public void Start() throws Exception {
-        System.out.println("   adatbev    kezdete ");
+      
         adatBevitel();
-        System.out.println("    adatbev vége -- kiiras kezdete  ");
-        
-        kiiras();
-        System.out.println("  kiiras vege --- sql upload kezdete     ");
-        
         sqlUpload();
-        System.out.println("sql vége");
     }
     
     
@@ -64,9 +58,33 @@ private List<Order> orders = new ArrayList<>();
          System.out.println("Opened database successfully");
 
          stmt = c.createStatement();
-         String sql = "INSERT INTO orderx (\"OrderId\",\"BuyerName\",\"BuyerEmail\",\"OrderDate\",\"OrderTotalValue\",\"Address\",\"Postcode\")\n" +
-"VALUES ('11','02','03','2018-01-01','05','06','07')";
-         stmt.executeUpdate(sql);
+         String clearTables = "TRUNCATE TABLE orders,order_item";
+          stmt.executeUpdate(clearTables);
+
+         
+         String sqlInsertOrders,sqlInstertOrder_item ;
+         
+     
+               
+          for (Order order : orders) {
+               System.out.println(order);                  //kiiratás konzolra a fájlbol beolvasott értékeket
+                sqlInsertOrders= "INSERT INTO orders (\"OrderId\",\"BuyerName\",\"BuyerEmail\",\"OrderDate\",\"OrderTotalValue\",\"Address\",\"Postcode\")" 
+                        +"VALUES ('"+order.getOrderId()+"','"+order.getBuyerName()+"','"+order.getBuyerEmail()+"','"+order.getOrderDate()+"','05','"
+                        +order.getAddress()+"','"+order.getPostcode()+"')";
+                System.out.println("    asd ");
+                
+              
+                 stmt.executeUpdate(sqlInsertOrders);
+          }
+       
+          
+          for (Order order : orders) {
+                sqlInstertOrder_item="INSERT INTO order_item (\"OrderItemId\",\"OrderId\",\"SalePrice\",\"ShippingPrice\",\"TotalItemPrice\",\"SKU\")" 
+                        +"VALUES ('"+order.getOrderItemId()+"','"+order.getOrderId()+"','"+order.getSalePrice()+"','"+order.getShippingPrice()+"','"
+                        +order.totalItemPrice()+"','" +order.getSku()+"')";
+                 stmt.executeUpdate(sqlInstertOrder_item);
+          }
+         
          stmt.close();
          c.close();
       } catch ( Exception e ) {
@@ -76,39 +94,14 @@ private List<Order> orders = new ArrayList<>();
       System.out.println("Table created successfully");
             
     
-            
-  //      Connection kapcsolat = kapcsolodas();
 
-     //   ImpportInterface impportInterface = new SendSql(kapcsolat);
-
-      // orders = ImpportInterface.orderList();
-
-       
 
     }
 
-   /* private Connection kapcsolodas() throws SQLException, ClassNotFoundException {
-
-        Class.forName("org.postgresql.Driver");  //org.apache.derby.jdbc.EmbeddedDriver
-
-        String url = "jdbc:postgresql://localhost:5432/001"; //String url = "jdbc:derby://localhost:1527/utazas6";
-
-        return DriverManager.getConnection(url, "postgres", "root");
-        
-       
-    }*/
-    
-    
-
-    private void kiiras(){
-    
-        for (Order order : orders) {
-            System.out.println(order);
-        }
     
     
     }
     
     
     
-}
+
