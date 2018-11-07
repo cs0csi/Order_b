@@ -15,7 +15,7 @@ import java.util.Scanner;
  *
  * @author csocsi
  */
-public class ImportCSV implements ImpportInterface{
+public class ImportCSV {
        private File orderFile;
        private final String CHAR_SET = ("UTF-8");
 
@@ -28,12 +28,19 @@ public List<Order> orderList() throws Exception {
 
            String sor, adatok[];
 
+        
+       
             while (fileScanner.hasNextLine()) {
+                 EmailValidator emailValidator = new EmailValidator();
                 sor = fileScanner.nextLine();
                 adatok = sor.split(";");
              //   if (adatok.length == 1) {   //11111111111111111
                   
 
+                if (!emailValidator.validate(adatok[4]))  {
+                    adatok[4] ="hibás";
+                }
+ 
                  orders.add(new Order(Integer.parseInt(adatok[0]),(Integer.parseInt(adatok[1])),(Integer.parseInt(adatok[2])),adatok[3],adatok[4],adatok[5],Integer.parseInt(adatok[6]), (Double.parseDouble(adatok[7])),(Double.parseDouble(adatok[8])),Integer.parseInt(adatok[9]),adatok[10])); 
 
 
@@ -42,6 +49,19 @@ public List<Order> orderList() throws Exception {
            
 
             }
+            
+            
+         
+        /*
+        for (String email : orders.)
+        {
+            System.out.println(email + " is Valid = " + emailValidator.validate(email));
+        }
+            
+          */
+            
+            
+            
         }
         return orders;
     }   
