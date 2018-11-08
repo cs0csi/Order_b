@@ -2,18 +2,28 @@ package controls;
 
 import IO.ImportCSV;
 import OrderClass.Order;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Control {
 
-    private final String FILE_SOURCE = "/Csv/input.csv";
+    private final String INPUT_FILE_SOURCE = "/Csv/input.csv";
+    private final String OUTPUT_FILE_SOURCE = "src/Csv/output.csv";
 
     private List<Order> orders = new ArrayList<>();
 
@@ -21,13 +31,14 @@ public class Control {
 
         adatBevitel();
         sqlUpload();
+        writeToCSV();
     }
 
     private void adatBevitel() {
 
         try {
             File orderFile
-                    = new File(this.getClass().getResource(FILE_SOURCE).toURI());
+                    = new File(this.getClass().getResource(INPUT_FILE_SOURCE).toURI());
 
             ImportCSV fileInp = new ImportCSV(orderFile);
             orders = fileInp.orderList();
@@ -36,6 +47,29 @@ public class Control {
 
             Logger.getLogger(Control.class.getName()).log(Level.SEVERE, null, ex);
 
+        }
+    }
+
+    private static final String CSV_SEPARATOR = ";";
+
+    private void writeToCSV() {
+        try {
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(OUTPUT_FILE_SOURCE), "UTF-8"));
+            for (Order order : orders) {
+                StringBuffer oneLine = new StringBuffer();
+                oneLine.append(order.getLineNumber() <= 0 ? "" : order.getLineNumber());
+                oneLine.append(CSV_SEPARATOR);
+                oneLine.append(order.getBuyerName().trim().length() == 0 ? "" : order.getBuyerName());
+                oneLine.append(CSV_SEPARATOR);
+
+                bw.write(oneLine.toString());
+                bw.newLine();
+            }
+            bw.flush();
+            bw.close();
+        } catch (UnsupportedEncodingException e) {
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
         }
     }
 
@@ -56,6 +90,8 @@ public class Control {
 
             String sqlInsertOrders, sqlInstertOrder_item;
 
+            // megnézni hogy létezik-e az order ID az adatbázisban
+//https://stackoverflow.com/questions/16099382/java-mysql-check-if-value-exists-in-database
             for (Order order : orders) {
                 //   System.out.println(order);                  //kiiratás konzolra a fájlbol beolvasott értékeket
                 sqlInsertOrders = "INSERT INTO orders (\"OrderId\",\"BuyerName\",\"BuyerEmail\",\"OrderDate\",\"OrderTotalValue\",\"Address\",\"Postcode\")"
