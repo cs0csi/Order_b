@@ -17,6 +17,7 @@ private int sku;
 private enum status{IN_STOCK,OUT_OF_STOCK};    // http://tutorials.jenkov.com/java/enums.html  // https://www.avajava.com/tutorials/lessons/how-do-i-use-the-enum-type-with-a-constructor.html
 private String orderDate;
 
+
     public Order(int lineNumber, int orderItemId, int orderId, String buyerName, String buyerEmail, String address, int postcode, double salePrice, double shippingPrice, int sku, String orderDate) {
         this.lineNumber = lineNumber;
         this.orderItemId = orderItemId;

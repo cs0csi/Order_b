@@ -3,11 +3,6 @@ package IO;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * 
- * How to validate email address with regular expression
- *
- */
 public class EmailValidator
 {
 
@@ -22,12 +17,7 @@ public class EmailValidator
         pattern = Pattern.compile(EMAIL_REGEX);
     }
 
-    /**
-     * Validate hex with regular expression
-     *
-     * @param email email for validation
-     * @return true valid email, false invalid email
-     */
+ 
     public boolean validate(final String email)
     {
         matcher = pattern.matcher(email);
