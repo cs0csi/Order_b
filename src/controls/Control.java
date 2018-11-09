@@ -1,7 +1,7 @@
 package controls;
 
-import IO.ImportCSV;
-import OrderClass.Order;
+import io.ImportCSV;
+import orderClass.Order;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -37,11 +37,10 @@ public class Control {
     private void adatBevitel() {
 
         try {
-            File orderFile
-                    = new File(this.getClass().getResource(INPUT_FILE_SOURCE).toURI());
+            File orderFile = new File(this.getClass().getResource(INPUT_FILE_SOURCE).toURI());
 
             ImportCSV fileInp = new ImportCSV(orderFile);
-            orders = fileInp.orderList();
+            orders = fileInp.readInputCsv();
 
         } catch (Exception ex) {
 
@@ -56,7 +55,7 @@ public class Control {
         try {
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(OUTPUT_FILE_SOURCE), "UTF-8"));
             for (Order order : orders) {
-                StringBuffer oneLine = new StringBuffer();
+                StringBuilder oneLine = new StringBuilder();
                 oneLine.append(order.getLineNumber() <= 0 ? "" : order.getLineNumber());
                 oneLine.append(CSV_SEPARATOR);
                 oneLine.append(order.getBuyerName().trim().length() == 0 ? "" : order.getBuyerName());
