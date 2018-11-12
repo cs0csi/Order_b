@@ -30,6 +30,9 @@ public class Control {
 
     private final String INPUT_FILE_SOURCE = "/Csv/input.csv";
     private final String OUTPUT_FILE_SOURCE = "src/Csv/output.csv";
+    private static final String DBUSER = "dbuser";
+    private static final String DBPASS = "dbpassword";
+    private static final String DATABASE = "database";
 
     private List<Order> orders = new ArrayList<>();
 
@@ -100,14 +103,16 @@ public class Control {
         }
     }
 
-    private void sqlUpload() {
+    private void sqlUpload() throws FileNotFoundException, IOException {
+        Properties prop = new Properties();
+        prop.load(new FileInputStream("config.properties")); // EZT VALAMI JOBB HELYRE?????
 
         Connection connect = null;
         Statement statement = null;
         Scanner sc = new Scanner(System.in);
         try {
             Class.forName("org.postgresql.Driver");
-            connect = DriverManager.getConnection("jdbc:postgresql://localhost:5432/001", "postgres", "root");
+            connect = DriverManager.getConnection(prop.getProperty(DATABASE), prop.getProperty(DBUSER), prop.getProperty(DBPASS));
             System.out.println("Opened database successfully");
 
             statement = connect.createStatement();
