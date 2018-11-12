@@ -15,13 +15,16 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import jdk.nashorn.internal.runtime.regexp.joni.exception.ErrorMessages;
 
 public class Control {
 
@@ -101,23 +104,27 @@ public class Control {
 
         Connection connect = null;
         Statement statement = null;
+        Scanner sc = new Scanner(System.in);
         try {
             Class.forName("org.postgresql.Driver");
-            connect = DriverManager
-                    .getConnection("jdbc:postgresql://localhost:5432/001",
-                            "postgres", "root");
+            connect = DriverManager.getConnection("jdbc:postgresql://localhost:5432/001", "postgres", "root");
             System.out.println("Opened database successfully");
 
             statement = connect.createStatement();
-            String clearTables = "TRUNCATE TABLE orders,order_item";
+            String clearTables = "TRUNCATE TABLE orders,order_item";     //ezt majd törölni a legvégén
             statement.executeUpdate(clearTables);
+            //statement.executeUpdate("select \"OrderId\" from orders where \"OrderId\" = 1");
 
             String sqlInsertOrders, sqlInstertOrder_item;
-
-            // megnézni hogy létezik-e az order ID az adatbázisban
-//https://stackoverflow.com/questions/16099382/java-mysql-check-if-value-exists-in-database
             for (Order order : orders) {
-                //   System.out.println(order);                  //kiiratás konzolra a fájlbol beolvasott értékeket
+
+                String sqlSelectOrderId = "select \"OrderId\" from orders where \"OrderId\" = " + order.getOrderId() + "";
+
+                ResultSet rs = statement.executeQuery(sqlSelectOrderId);
+                if (rs.next()) {
+                    order.setErrorMessage(order.geterrorMessage() + " DB erreorOrderID");
+                }
+
                 sqlInsertOrders = "INSERT INTO orders (\"OrderId\",\"BuyerName\",\"BuyerEmail\",\"OrderDate\",\"OrderTotalValue\",\"Address\",\"Postcode\")"
                         + "VALUES ('" + order.getOrderId() + "','" + order.getBuyerName() + "','" + order.getBuyerEmail() + "','" + order.getOrderDate() + "','05','"
                         + order.getAddress() + "','" + order.getPostcode() + "')";
@@ -125,16 +132,18 @@ public class Control {
                 statement.executeUpdate(sqlInsertOrders);
             }
 
-            // a kettőt lehtne egyesíteni
             for (Order order : orders) {
+                String sqlSelectOrderItemId = "select \"OrderItemId\" from order_item where \"OrderItemId\" = " + order.getOrderItemId() + "";
 
-                //    statement.executeUpdate("");
+                ResultSet rs = statement.executeQuery(sqlSelectOrderItemId);
+                if (rs.next()) {
+                    order.setErrorMessage(order.geterrorMessage() + " DB erreorOrderItemID");
+                }
                 sqlInstertOrder_item = "INSERT INTO order_item (\"OrderItemId\",\"OrderId\",\"SalePrice\",\"ShippingPrice\",\"TotalItemPrice\",\"SKU\")"
                         + "VALUES ('" + order.getOrderItemId() + "','" + order.getOrderId() + "','" + order.getSalePrice() + "','" + order.getShippingPrice() + "','"
                         + order.totalItemPrice() + "','" + order.getSku() + "')";
                 statement.executeUpdate(sqlInstertOrder_item);
             }
-
             statement.close();
             connect.close();
         } catch (Exception e) {

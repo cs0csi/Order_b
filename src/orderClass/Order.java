@@ -56,6 +56,10 @@ public class Order {
         return errorMessage;
     }
 
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
     public int getLineNumber() {
         return lineNumber;
     }
