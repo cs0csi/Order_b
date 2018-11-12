@@ -28,6 +28,7 @@ public class ImportCSV {
     public ImportCSV(File orderFile) {
         this.orderFile = orderFile;
     }
+    public boolean gotError = false;
 
     public List<Order> readInputCsv() {
         List<Order> orders = new ArrayList<>();
@@ -46,33 +47,43 @@ public class ImportCSV {
 
                 //   if (adatok.length == 1) {   //11111111111111111
                 if (!emailValidator.validate(adatok[4])) {
-                    adatok[4] = "hibás"; /// statusba kell majd írni
+                    adatok[11] = adatok[11] + " hibás email cím, ";
+                    gotError = true;
 
                 }
 
                 if (adatok[10] == null || adatok[10].isEmpty()) {
 
                     adatok[10] = modifiedDate;
+                    adatok[11] = adatok[11] + " dátum nem lett beírva a mai lett megadva, ";
+
                 }
 
                 for (int i = 0; i < adatok.length - 1; i++) {
                     if (adatok[i] == null || adatok[i].isEmpty()) {
 
-                        System.out.println("üres a " + i + "  -dik  elem");  //Statusba irni ezt is
+                        adatok[11] = adatok[11] + " üres cella található, ";
+                        //    System.out.println("üres a " + i + "  -dik  elem");  //ha kiváncsiak vagyunk hányadik cella
                     }
                 }
 
                 if (!adatok[10].matches("\\d{4}-\\d{2}-\\d{2}")) {
-                    adatok[10] = "2000-01-01";   //statusba irni hogy hibás email formatum
+                    adatok[11] = adatok[11] + " hibás dátum formátum alapértelmezettre beállítva, ";
+                    adatok[10] = "1900-01-01";
+                    gotError = Boolean.TRUE;
+                }
+                if (Double.parseDouble(adatok[7]) < 1.00) {
+                    adatok[11] = adatok[11] + "  Saleprice kissebb mint 1.00, ";
+                }
+                if (Double.parseDouble(adatok[8]) < 0.00) {
+                    adatok[11] = adatok[11] + "  ShippingPrice kissebb mint 0.00, ";
                 }
 
                 orders.add(new Order(Integer.parseInt(adatok[0]), (Integer.parseInt(adatok[1])), (Integer.parseInt(adatok[2])),
                         adatok[3], adatok[4], adatok[5], Integer.parseInt(adatok[6]), (Double.parseDouble(adatok[7])),
-                        (Double.parseDouble(adatok[8])), Integer.parseInt(adatok[9]), adatok[10]));
+                        (Double.parseDouble(adatok[8])), Integer.parseInt(adatok[9]), adatok[10], adatok[11]));
 
-                //   }
             }
-
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ImportCSV.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("Input file not found");
@@ -81,4 +92,9 @@ public class ImportCSV {
 
         return orders;
     }
+
+    public boolean isGotError() {
+        return gotError;
+    }
+
 }

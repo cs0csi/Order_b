@@ -4,10 +4,12 @@ import io.ImportCSV;
 import orderClass.Order;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
@@ -17,6 +19,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,7 +34,10 @@ public class Control {
 
         adatBevitel();
         sqlUpload();
+
+        konzolkiiratas();
         writeToCSV();
+
     }
 
     private void adatBevitel() {
@@ -52,23 +58,42 @@ public class Control {
     private static final String CSV_SEPARATOR = ";";
 
     private void writeToCSV() {
-        try {
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(OUTPUT_FILE_SOURCE), "UTF-8"));
-            for (Order order : orders) {
-                StringBuilder oneLine = new StringBuilder();
-                oneLine.append(order.getLineNumber() <= 0 ? "" : order.getLineNumber());
-                oneLine.append(CSV_SEPARATOR);
-                oneLine.append(order.getBuyerName().trim().length() == 0 ? "" : order.getBuyerName());
-                oneLine.append(CSV_SEPARATOR);
 
-                bw.write(oneLine.toString());
-                bw.newLine();
+        try {
+            try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(OUTPUT_FILE_SOURCE), "UTF-8"))) {
+                for (Order order : orders) {
+                    StringBuilder oneLine = new StringBuilder();
+
+                    oneLine.append(order.getLineNumber());
+                    oneLine.append(CSV_SEPARATOR);
+                    if (!order.geterrorMessage().isEmpty()) {
+                        oneLine.append(" ERROR");
+                        oneLine.append(CSV_SEPARATOR);
+                        oneLine.append(order.geterrorMessage());
+                    } else {
+
+                        oneLine.append(" OK");
+                    }
+                    oneLine.append(CSV_SEPARATOR);
+//                    if (order.geterrorMessage() != null) {
+//                        oneLine.append(order.getLineNumber() <= 0 ? "" : order.getLineNumber());
+//                        oneLine.append(CSV_SEPARATOR);
+//                        oneLine.append(order.geterrorMessage().trim().length() == 0 ? "" : order.geterrorMessage());
+//                        oneLine.append(CSV_SEPARATOR);
+//                    }
+                    bw.write(oneLine.toString());
+                    bw.newLine();
+                }
+                bw.flush();
             }
-            bw.flush();
-            bw.close();
         } catch (UnsupportedEncodingException e) {
+            System.out.println(e);
         } catch (FileNotFoundException e) {
+            System.out.println(e);
         } catch (IOException e) {
+            System.out.println(e);
+        } catch (NullPointerException e) {
+            System.out.println(e + "222 ");
         }
     }
 
@@ -118,6 +143,12 @@ public class Control {
         }
         System.out.println("Table created successfully");
 
+    }
+
+    private void konzolkiiratas() {
+        for (Order order : orders) {
+            System.out.println(order);
+        }
     }
 
 }

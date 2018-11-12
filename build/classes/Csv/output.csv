@@ -1,4 +1,4 @@
-1;;
-2;Imre;
-3;Bela;
-5;Kata;
+1; ERROR; hibás email cím,   Saleprice kissebb mint 1.00, ;
+2; ERROR; hibás dátum formátum alapértelmezettre beállítva, ;
+3; OK;
+5; ERROR; dátum nem lett beírva a mai lett megadva, ;
