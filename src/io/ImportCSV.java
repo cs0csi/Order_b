@@ -28,7 +28,6 @@ public class ImportCSV {
     public ImportCSV(File orderFile) {
         this.orderFile = orderFile;
     }
-    public boolean gotError = false;
 
     public List<Order> readInputCsv() {
         List<Order> orders = new ArrayList<>();
@@ -48,7 +47,6 @@ public class ImportCSV {
                 //   if (adatok.length == 1) {   //11111111111111111
                 if (!emailValidator.validate(adatok[4])) {
                     adatok[11] = adatok[11] + " hibás email cím, ";
-                    gotError = true;
 
                 }
 
@@ -70,7 +68,7 @@ public class ImportCSV {
                 if (!adatok[10].matches("\\d{4}-\\d{2}-\\d{2}")) {
                     adatok[11] = adatok[11] + " hibás dátum formátum alapértelmezettre beállítva, ";
                     adatok[10] = "1900-01-01";
-                    gotError = Boolean.TRUE;
+
                 }
                 if (Double.parseDouble(adatok[7]) < 1.00) {
                     adatok[11] = adatok[11] + "  Saleprice kissebb mint 1.00, ";
@@ -91,10 +89,6 @@ public class ImportCSV {
         }
 
         return orders;
-    }
-
-    public boolean isGotError() {
-        return gotError;
     }
 
 }

@@ -41,9 +41,9 @@ public class Control {
         adatBevitel();
         sqlUpload();
 
-        konzolkiiratas();
+        //     konzolkiiratas();
         writeToCSV();
-
+        FTPFunctions.main();
     }
 
     private void adatBevitel() {
@@ -81,12 +81,6 @@ public class Control {
                         oneLine.append(" OK");
                     }
                     oneLine.append(CSV_SEPARATOR);
-//                    if (order.geterrorMessage() != null) {
-//                        oneLine.append(order.getLineNumber() <= 0 ? "" : order.getLineNumber());
-//                        oneLine.append(CSV_SEPARATOR);
-//                        oneLine.append(order.geterrorMessage().trim().length() == 0 ? "" : order.geterrorMessage());
-//                        oneLine.append(CSV_SEPARATOR);
-//                    }
                     bw.write(oneLine.toString());
                     bw.newLine();
                 }
@@ -118,7 +112,6 @@ public class Control {
             statement = connect.createStatement();
             String clearTables = "TRUNCATE TABLE orders,order_item";     //ezt majd törölni a legvégén
             statement.executeUpdate(clearTables);
-            //statement.executeUpdate("select \"OrderId\" from orders where \"OrderId\" = 1");
 
             String sqlInsertOrders, sqlInstertOrder_item;
             for (Order order : orders) {
