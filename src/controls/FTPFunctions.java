@@ -2,23 +2,24 @@ package controls;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.Properties;
 
 import org.apache.commons.net.PrintCommandListener;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
-
-import static org.junit.Assert.assertTrue;
 
 public class FTPFunctions {
 
     // Creating FTP Client instance
     FTPClient ftp = null;
+    private static final String FTPUSER = "ftpuser";
+    private static final String FTPPASS = "ftppassword";
+    private static final String FTPURL = "ftpurl";
+    private static final int FTPPORT = 21;
 
     // Constructor to connect to the FTP Server
     public FTPFunctions(String host, int port, String username, String password) throws Exception {
@@ -65,7 +66,11 @@ public class FTPFunctions {
 
     public static void main() {
         try {
-            FTPFunctions ftpobj = new FTPFunctions("localhost", 21, "user01", "root");
+            Properties prop = new Properties();
+            prop.load(new FileInputStream("config.properties"));
+
+            FTPFunctions ftpobj = new FTPFunctions(prop.getProperty(FTPURL), FTPPORT, prop.getProperty(FTPUSER), prop.getProperty(FTPPASS));
+
             ftpobj.uploadFTPFile("src/Csv/output.csv", "output.csv", "");
 
             ftpobj.disconnect();
