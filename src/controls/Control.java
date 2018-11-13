@@ -39,11 +39,11 @@ public class Control {
     public void Start() throws Exception {
 
         adatBevitel();
-        sqlUpload();
+        //  sqlUpload();
 
-        //     konzolkiiratas();
-        writeToCSV();
-        FTPFunctions.main();
+        konzolkiiratas();
+        //   writeToCSV();
+        //     FTPFunctions.main();
     }
 
     private void adatBevitel() {
