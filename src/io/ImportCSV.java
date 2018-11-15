@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package io;
 
 import orderClass.Order;
@@ -15,14 +10,10 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import orderClass.Status;
 
-/**
- *
- * @author csocsi
- */
 public class ImportCSV {
-Order order;
+
+    Order order;
     private File orderFile;
     private final String CHAR_SET = ("UTF-8");
 
@@ -79,8 +70,6 @@ Order order;
                         adatok[3], adatok[4], adatok[5], Integer.parseInt(adatok[6]), (Double.parseDouble(adatok[7])),
                         (Double.parseDouble(adatok[8])), Integer.parseInt(adatok[9]), adatok[10], adatok[11], adatok[12]));
 
-               
-           
             }
 
         } catch (FileNotFoundException ex) {

@@ -2,3 +2,4 @@
 2; ERROR; hibás dátum formátum alapértelmezettre beállítva, ;
 3; OK;
 5; ERROR; dátum nem lett beírva a mai lett megadva, ;
+8; OK;

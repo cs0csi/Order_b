@@ -7,24 +7,19 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.io.Writer;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jdk.nashorn.internal.runtime.regexp.joni.exception.ErrorMessages;
 import orderClass.Status;
 
 public class Control {
@@ -34,6 +29,7 @@ public class Control {
     private static final String DBUSER = "dbuser";
     private static final String DBPASS = "dbpassword";
     private static final String DATABASE = "database";
+    private static final String DBDRIVER = "dbdriver";
 
     private List<Order> orders = new ArrayList<>();
 
@@ -41,9 +37,8 @@ public class Control {
 
         adatBevitel();
         sqlUpload();
-        konzolkiiratas();
-        //   writeToCSV();
-        //     FTPFunctions.main();
+        writeToCSV();
+        //   FTPFunctions.main();
     }
 
     private void adatBevitel() {
@@ -93,37 +88,37 @@ public class Control {
         } catch (IOException e) {
             System.out.println(e);
         } catch (NullPointerException e) {
-            System.out.println(e + "222 ");
+            System.out.println(e);
         }
     }
 
     private void sqlUpload() throws FileNotFoundException, IOException {
         Properties prop = new Properties();
-        prop.load(new FileInputStream("config.properties")); // EZT VALAMI JOBB HELYRE?????
+        prop.load(new FileInputStream("config.properties"));
 
         Connection connect = null;
         Statement statement = null;
         Scanner sc = new Scanner(System.in);
         try {
-            Class.forName("org.postgresql.Driver");
+            Class.forName(prop.getProperty(DBDRIVER));
             connect = DriverManager.getConnection(prop.getProperty(DATABASE), prop.getProperty(DBUSER), prop.getProperty(DBPASS));
             System.out.println("Opened database successfully");
 
             statement = connect.createStatement();
-            String clearTables = "TRUNCATE TABLE orders,order_item";     //ezt majd törölni a legvégén
+            String clearTables = "TRUNCATE TABLE \"order\",order_item";     //ezt majd törölni a legvégén
             statement.executeUpdate(clearTables);
 
             String sqlInsertOrders, sqlInstertOrder_item;
             for (Order order : orders) {
 
-                String sqlSelectOrderId = "select \"OrderId\" from orders where \"OrderId\" = " + order.getOrderId() + "";
+                String sqlSelectOrderId = "select \"OrderId\" from \"order\" where \"OrderId\" = " + order.getOrderId() + "";
 
                 ResultSet rs = statement.executeQuery(sqlSelectOrderId);
                 if (rs.next()) {
                     order.setErrorMessage(order.geterrorMessage() + " DB erreorOrderID");
                 }
 
-                sqlInsertOrders = "INSERT INTO orders (\"OrderId\",\"BuyerName\",\"BuyerEmail\",\"OrderDate\",\"OrderTotalValue\",\"Address\",\"Postcode\")"
+                sqlInsertOrders = "INSERT INTO \"order\" (\"OrderId\",\"BuyerName\",\"BuyerEmail\",\"OrderDate\",\"OrderTotalValue\",\"Address\",\"Postcode\")"
                         + "VALUES ('" + order.getOrderId() + "','" + order.getBuyerName() + "','" + order.getBuyerEmail() + "','" + order.getOrderDate() + "','05','"
                         + order.getAddress() + "','" + order.getPostcode() + "')";
 
@@ -153,13 +148,6 @@ public class Control {
         }
         System.out.println("Table created successfully");
 
-    }
-
-    private void konzolkiiratas() {
-        for (Order order : orders) {
-            System.out.println(order);
-
-        }
     }
 
 }

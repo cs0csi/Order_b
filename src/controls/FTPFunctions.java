@@ -14,14 +14,12 @@ import org.apache.commons.net.ftp.FTPReply;
 
 public class FTPFunctions {
 
-    // Creating FTP Client instance
     FTPClient ftp = null;
     private static final String FTPUSER = "ftpuser";
     private static final String FTPPASS = "ftppassword";
     private static final String FTPURL = "ftpurl";
     private static final int FTPPORT = 21;
 
-    // Constructor to connect to the FTP Server
     public FTPFunctions(String host, int port, String username, String password) throws Exception {
 
         ftp = new FTPClient();
@@ -39,7 +37,6 @@ public class FTPFunctions {
         ftp.enterLocalPassiveMode();
     }
 
-    // Method to upload the File on the FTP Server
     public void uploadFTPFile(String localFileFullName, String fileName, String hostDir)
             throws Exception {
         try {
@@ -52,14 +49,12 @@ public class FTPFunctions {
         }
     }
 
-    // Disconnect the connection to FTP
     public void disconnect() {
         if (this.ftp.isConnected()) {
             try {
                 this.ftp.logout();
                 this.ftp.disconnect();
             } catch (IOException f) {
-                // do nothing as file is already saved to server
             }
         }
     }

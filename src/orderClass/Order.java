@@ -1,9 +1,5 @@
 package orderClass;
 
-import io.ImportCSV;
-import static java.lang.Math.round;
-import java.text.DecimalFormat;
-
 public class Order {
 
     private int lineNumber;
@@ -18,12 +14,13 @@ public class Order {
     private int sku;
     private String orderDate;
     private String errorMessage = " ";
-    private  String vane;
+    private String vane;
 
+    public Order(int lineNumber, int orderItemId, int orderId, String buyerName,
+            String buyerEmail, String address, int postcode, double salePrice,
+            double shippingPrice, int sku, String orderDate, String vane,
+            String errorMessage) {
 
-
-//       // http://tutorials.jenkov.com/java/enums.html  // https://www.avajava.com/tutorials/lessons/how-do-i-use-the-enum-type-with-a-constructor.html// http://tutorials.jenkov.com/java/enums.html  // https://www.avajava.com/tutorials/lessons/how-do-i-use-the-enum-type-with-a-constructor.html// http://tutorials.jenkov.com/java/enums.html  // https://www.avajava.com/tutorials/lessons/how-do-i-use-the-enum-type-with-a-constructor.html// http://tutorials.jenkov.com/java/enums.html  // https://www.avajava.com/tutorials/lessons/how-do-i-use-the-enum-type-with-a-constructor.html
-    public Order(int lineNumber, int orderItemId, int orderId, String buyerName, String buyerEmail, String address, int postcode, double salePrice, double shippingPrice, int sku, String orderDate, String vane, String errorMessage) {
         this.lineNumber = lineNumber;
         this.orderItemId = orderItemId;
         this.orderId = orderId;
@@ -39,9 +36,6 @@ public class Order {
         this.errorMessage = errorMessage;
 
     }
-
-//     this.salePrice = Math.round(salePrice * 100.00) / 100.00;
-//        this.shippingPrice = Math.round(shippingPrice * 100.00) / 100.00;
 
     public double totalItemPrice() {
         return getSalePrice() + getShippingPrice();
@@ -102,11 +96,6 @@ public class Order {
 
     public String getVane() {
         return vane;
-    }
-
-    @Override
-    public String toString() {
-        return "Order{" + "lineNumber=" + lineNumber + ", van?=" + vane + '}';
     }
 
 }
