@@ -14,11 +14,11 @@ public class Order {
     private int sku;
     private String orderDate;
     private String errorMessage = " ";
-    private String vane;
+    private String onStock;
 
     public Order(int lineNumber, int orderItemId, int orderId, String buyerName,
             String buyerEmail, String address, int postcode, double salePrice,
-            double shippingPrice, int sku, String orderDate, String vane,
+            double shippingPrice, int sku, String orderDate, String onStock,
             String errorMessage) {
 
         this.lineNumber = lineNumber;
@@ -32,7 +32,7 @@ public class Order {
         this.shippingPrice = Math.round(shippingPrice * 100.00) / 100.00;
         this.sku = sku;
         this.orderDate = orderDate;
-        this.vane = vane;
+        this.onStock = onStock;
         this.errorMessage = errorMessage;
 
     }
@@ -94,8 +94,8 @@ public class Order {
         return orderId;
     }
 
-    public String getVane() {
-        return vane;
+    public String getOnStock() {
+        return onStock;
     }
 
 }

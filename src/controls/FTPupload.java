@@ -12,7 +12,7 @@ import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 
-public class FTPFunctions {
+public class FTPupload {
 
     FTPClient ftp = null;
     private static final String FTPUSER = "ftpuser";
@@ -20,7 +20,7 @@ public class FTPFunctions {
     private static final String FTPURL = "ftpurl";
     private static final int FTPPORT = 21;
 
-    public FTPFunctions(String host, int port, String username, String password) throws Exception {
+    public FTPupload(String host, int port, String username, String password) throws Exception {
 
         ftp = new FTPClient();
         ftp.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out)));
@@ -64,9 +64,9 @@ public class FTPFunctions {
             Properties prop = new Properties();
             prop.load(new FileInputStream("config.properties"));
 
-            FTPFunctions ftpobj = new FTPFunctions(prop.getProperty(FTPURL), FTPPORT, prop.getProperty(FTPUSER), prop.getProperty(FTPPASS));
+            FTPupload ftpobj = new FTPupload(prop.getProperty(FTPURL), FTPPORT, prop.getProperty(FTPUSER), prop.getProperty(FTPPASS));
 
-            ftpobj.uploadFTPFile("src/Csv/output.csv", "output.csv", "");
+            ftpobj.uploadFTPFile("src/Csv/responseFile.csv", "responseFile.csv", "");
 
             ftpobj.disconnect();
         } catch (Exception e) {

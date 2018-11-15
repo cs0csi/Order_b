@@ -1,6 +1,5 @@
 package controls;
 
-import io.ImportCSV;
 import orderClass.Order;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -24,31 +23,32 @@ import orderClass.Status;
 
 public class Control {
 
-    private final String INPUT_FILE_SOURCE = "/Csv/input.csv";
-    private final String OUTPUT_FILE_SOURCE = "src/Csv/output.csv";
+    private final String INPUT_FILE_SOURCE = "/files/inputFile.csv";
+    private final String OUTPUT_FILE_SOURCE = "src/files/responseFile.csv";
     private static final String DBUSER = "dbuser";
     private static final String DBPASS = "dbpassword";
     private static final String DATABASE = "database";
     private static final String DBDRIVER = "dbdriver";
+    private static final String CSV_SEPARATOR = ";";
 
     private List<Order> orders = new ArrayList<>();
 
     public void Start() throws Exception {
 
-        adatBevitel();
+        dataEntry();
         sqlUpload();
         writeToCSV();
-        //   FTPFunctions.main();
+        FTPupload.main();
     }
 
-    private void adatBevitel() {
+    private void dataEntry() {
 
         try {
             File orderFile = new File(this.getClass().getResource(INPUT_FILE_SOURCE).toURI());
 
-            ImportCSV fileInp = new ImportCSV(orderFile);
+            ValidatorValidator fileInp = new ValidatorValidator(orderFile);
             orders = fileInp.readInputCsv();
-
+            totalCounter();
         } catch (Exception ex) {
 
             Logger.getLogger(Control.class.getName()).log(Level.SEVERE, null, ex);
@@ -56,7 +56,13 @@ public class Control {
         }
     }
 
-    private static final String CSV_SEPARATOR = ";";
+    private double totalCounter() {
+        double sum = 0;
+        for (Order order : orders) {
+            sum += order.totalItemPrice();
+        }
+        return sum;
+    }
 
     private void writeToCSV() {
 
@@ -68,12 +74,10 @@ public class Control {
                     oneLine.append(order.getLineNumber());
                     oneLine.append(CSV_SEPARATOR);
                     if (!order.geterrorMessage().isEmpty()) {
-                        oneLine.append(" ERROR");
-                        oneLine.append(CSV_SEPARATOR);
+                        oneLine.append("ERROR");
                         oneLine.append(order.geterrorMessage());
                     } else {
-
-                        oneLine.append(" OK");
+                        oneLine.append("OK");
                     }
                     oneLine.append(CSV_SEPARATOR);
                     bw.write(oneLine.toString());
@@ -98,28 +102,27 @@ public class Control {
 
         Connection connect = null;
         Statement statement = null;
-        Scanner sc = new Scanner(System.in);
         try {
             Class.forName(prop.getProperty(DBDRIVER));
-            connect = DriverManager.getConnection(prop.getProperty(DATABASE), prop.getProperty(DBUSER), prop.getProperty(DBPASS));
-            System.out.println("Opened database successfully");
-
+            connect = DriverManager.getConnection(prop.getProperty(DATABASE),
+                    prop.getProperty(DBUSER), prop.getProperty(DBPASS));
             statement = connect.createStatement();
-            String clearTables = "TRUNCATE TABLE \"order\",order_item";     //ezt majd törölni a legvégén
-            statement.executeUpdate(clearTables);
 
             String sqlInsertOrders, sqlInstertOrder_item;
             for (Order order : orders) {
 
-                String sqlSelectOrderId = "select \"OrderId\" from \"order\" where \"OrderId\" = " + order.getOrderId() + "";
+                String sqlSelectOrderId
+                        = "select \"OrderId\" from \"order\" where \"OrderId\" = " + order.getOrderId() + "";
 
                 ResultSet rs = statement.executeQuery(sqlSelectOrderId);
                 if (rs.next()) {
-                    order.setErrorMessage(order.geterrorMessage() + " DB erreorOrderID");
+                    order.setErrorMessage(order.geterrorMessage() + ";DB erreorOrderID");
                 }
 
-                sqlInsertOrders = "INSERT INTO \"order\" (\"OrderId\",\"BuyerName\",\"BuyerEmail\",\"OrderDate\",\"OrderTotalValue\",\"Address\",\"Postcode\")"
-                        + "VALUES ('" + order.getOrderId() + "','" + order.getBuyerName() + "','" + order.getBuyerEmail() + "','" + order.getOrderDate() + "','05','"
+                sqlInsertOrders = "INSERT INTO \"order\" (\"OrderId\",\"BuyerName\","
+                        + "\"BuyerEmail\",\"OrderDate\",\"OrderTotalValue\",\"Address\",\"Postcode\")"
+                        + "VALUES ('" + order.getOrderId() + "','" + order.getBuyerName()
+                        + "','" + order.getBuyerEmail() + "','" + order.getOrderDate() + "','" + totalCounter() + "','"
                         + order.getAddress() + "','" + order.getPostcode() + "')";
 
                 statement.executeUpdate(sqlInsertOrders);
@@ -127,16 +130,19 @@ public class Control {
 
             for (Order order : orders) {
 
-                Status st = Status.valueOf(order.getVane());
+                Status st = Status.valueOf(order.getOnStock());
 
-                String sqlSelectOrderItemId = "select \"OrderItemId\" from order_item where \"OrderItemId\" = " + order.getOrderItemId() + "";
+                String sqlSelectOrderItemId = "select \"OrderItemId\" from order_item where \"OrderItemId\" = "
+                        + order.getOrderItemId() + "";
 
                 ResultSet rs = statement.executeQuery(sqlSelectOrderItemId);
                 if (rs.next()) {
-                    order.setErrorMessage(order.geterrorMessage() + " DB erreorOrderItemID");
+                    order.setErrorMessage(order.geterrorMessage() + ";DB erreorOrderItemID");
                 }
-                sqlInstertOrder_item = "INSERT INTO order_item (\"OrderItemId\",\"OrderId\",\"SalePrice\",\"ShippingPrice\",\"TotalItemPrice\",\"SKU\",\"Status\")"
-                        + "VALUES ('" + order.getOrderItemId() + "','" + order.getOrderId() + "','" + order.getSalePrice() + "','" + order.getShippingPrice() + "','"
+                sqlInstertOrder_item = "INSERT INTO order_item"
+                        + " (\"OrderItemId\",\"OrderId\",\"SalePrice\",\"ShippingPrice\",\"TotalItemPrice\",\"SKU\",\"Status\")"
+                        + "VALUES ('" + order.getOrderItemId() + "','" + order.getOrderId()
+                        + "','" + order.getSalePrice() + "','" + order.getShippingPrice() + "','"
                         + order.totalItemPrice() + "','" + order.getSku() + "','" + st + "')";
                 statement.executeUpdate(sqlInstertOrder_item);
             }
