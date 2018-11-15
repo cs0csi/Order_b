@@ -22,7 +22,7 @@ import orderClass.Status;
  * @author csocsi
  */
 public class ImportCSV {
-
+Order order;
     private File orderFile;
     private final String CHAR_SET = ("UTF-8");
 
@@ -77,8 +77,10 @@ public class ImportCSV {
 
                 orders.add(new Order(Integer.parseInt(adatok[0]), (Integer.parseInt(adatok[1])), (Integer.parseInt(adatok[2])),
                         adatok[3], adatok[4], adatok[5], Integer.parseInt(adatok[6]), (Double.parseDouble(adatok[7])),
-                        (Double.parseDouble(adatok[8])), Integer.parseInt(adatok[9]), adatok[10], adatok[12]));
+                        (Double.parseDouble(adatok[8])), Integer.parseInt(adatok[9]), adatok[10], adatok[11], adatok[12]));
 
+               
+           
             }
 
         } catch (FileNotFoundException ex) {

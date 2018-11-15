@@ -18,18 +18,12 @@ public class Order {
     private int sku;
     private String orderDate;
     private String errorMessage = " ";
-    private boolean statusBoolean;
+    private  String vane;
 
-    public void setStatusBoolean(boolean statusBoolean) {
-        this.statusBoolean = statusBoolean;
-    }
 
-    public boolean isStatusBoolean() {
-        return statusBoolean;
-    }
 
 //       // http://tutorials.jenkov.com/java/enums.html  // https://www.avajava.com/tutorials/lessons/how-do-i-use-the-enum-type-with-a-constructor.html// http://tutorials.jenkov.com/java/enums.html  // https://www.avajava.com/tutorials/lessons/how-do-i-use-the-enum-type-with-a-constructor.html// http://tutorials.jenkov.com/java/enums.html  // https://www.avajava.com/tutorials/lessons/how-do-i-use-the-enum-type-with-a-constructor.html// http://tutorials.jenkov.com/java/enums.html  // https://www.avajava.com/tutorials/lessons/how-do-i-use-the-enum-type-with-a-constructor.html
-    public Order(int lineNumber, int orderItemId, int orderId, String buyerName, String buyerEmail, String address, int postcode, double salePrice, double shippingPrice, int sku, String orderDate, String errorMessage) {
+    public Order(int lineNumber, int orderItemId, int orderId, String buyerName, String buyerEmail, String address, int postcode, double salePrice, double shippingPrice, int sku, String orderDate, String vane, String errorMessage) {
         this.lineNumber = lineNumber;
         this.orderItemId = orderItemId;
         this.orderId = orderId;
@@ -41,9 +35,13 @@ public class Order {
         this.shippingPrice = Math.round(shippingPrice * 100.00) / 100.00;
         this.sku = sku;
         this.orderDate = orderDate;
+        this.vane = vane;
         this.errorMessage = errorMessage;
 
     }
+
+//     this.salePrice = Math.round(salePrice * 100.00) / 100.00;
+//        this.shippingPrice = Math.round(shippingPrice * 100.00) / 100.00;
 
     public double totalItemPrice() {
         return getSalePrice() + getShippingPrice();
@@ -102,9 +100,13 @@ public class Order {
         return orderId;
     }
 
+    public String getVane() {
+        return vane;
+    }
+
     @Override
     public String toString() {
-        return "Order{" + "lineNumber=" + lineNumber + ", sText=" + errorMessage + '}';
+        return "Order{" + "lineNumber=" + lineNumber + ", van?=" + vane + '}';
     }
 
 }

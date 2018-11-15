@@ -25,6 +25,7 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ErrorMessages;
+import orderClass.Status;
 
 public class Control {
 
@@ -39,8 +40,7 @@ public class Control {
     public void Start() throws Exception {
 
         adatBevitel();
-        //  sqlUpload();
-
+        sqlUpload();
         konzolkiiratas();
         //   writeToCSV();
         //     FTPFunctions.main();
@@ -131,15 +131,18 @@ public class Control {
             }
 
             for (Order order : orders) {
+
+                Status st = Status.valueOf(order.getVane());
+
                 String sqlSelectOrderItemId = "select \"OrderItemId\" from order_item where \"OrderItemId\" = " + order.getOrderItemId() + "";
 
                 ResultSet rs = statement.executeQuery(sqlSelectOrderItemId);
                 if (rs.next()) {
                     order.setErrorMessage(order.geterrorMessage() + " DB erreorOrderItemID");
                 }
-                sqlInstertOrder_item = "INSERT INTO order_item (\"OrderItemId\",\"OrderId\",\"SalePrice\",\"ShippingPrice\",\"TotalItemPrice\",\"SKU\")"
+                sqlInstertOrder_item = "INSERT INTO order_item (\"OrderItemId\",\"OrderId\",\"SalePrice\",\"ShippingPrice\",\"TotalItemPrice\",\"SKU\",\"Status\")"
                         + "VALUES ('" + order.getOrderItemId() + "','" + order.getOrderId() + "','" + order.getSalePrice() + "','" + order.getShippingPrice() + "','"
-                        + order.totalItemPrice() + "','" + order.getSku() + "')";
+                        + order.totalItemPrice() + "','" + order.getSku() + "','" + st + "')";
                 statement.executeUpdate(sqlInstertOrder_item);
             }
             statement.close();
@@ -155,6 +158,7 @@ public class Control {
     private void konzolkiiratas() {
         for (Order order : orders) {
             System.out.println(order);
+
         }
     }
 
