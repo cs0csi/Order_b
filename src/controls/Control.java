@@ -46,7 +46,7 @@ public class Control {
         try {
             File orderFile = new File(this.getClass().getResource(INPUT_FILE_SOURCE).toURI());
 
-            ValidatorValidator fileInp = new ValidatorValidator(orderFile);
+            ImportValidator fileInp = new ImportValidator(orderFile);
             orders = fileInp.readInputCsv();
             totalCounter();
         } catch (Exception ex) {

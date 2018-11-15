@@ -12,13 +12,13 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ValidatorValidator {
+public class ImportValidator {
 
     Order order;
     private File orderFile;
     private final String CHAR_SET = ("UTF-8");
 
-    public ValidatorValidator(File orderFile) {
+    public ImportValidator(File orderFile) {
         this.orderFile = orderFile;
     }
     Date date = new Date();
@@ -74,7 +74,7 @@ public class ValidatorValidator {
             }
 
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(ValidatorValidator.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ImportValidator.class.getName()).log(Level.SEVERE, null, ex);
 
         }
 

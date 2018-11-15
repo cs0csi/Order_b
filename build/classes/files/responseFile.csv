@@ -1,0 +1,9 @@
+1;ERROR;Wrong e-mail address;SalePrice smaller than 1.00;
+2;ERROR;Defective date format is set to default;
+3;ERROR;empty cell is located;
+4;ERROR;Date has not been entered - set today;
+5;OK;
+6;ERROR;Defective date format is set to default;
+7;OK;
+8;OK;
+9;ERROR;ShippingPrice smaller than 0.00;

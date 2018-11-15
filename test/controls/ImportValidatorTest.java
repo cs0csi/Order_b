@@ -1,11 +1,11 @@
-package io;
+package controls;
 
-import controls.ValidatorValidator;
+import controls.ImportValidatorTest;
 import controls.EmailValidator;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class ImportCSVTest {
+public class ImportValidatorTest {
 
     @Test
     public void badEmailAddress() {
@@ -24,7 +24,7 @@ public class ImportCSVTest {
     @Test
     public void reachFile() throws Exception {
         String reach = "/Csv/inputFile.csv";
-        java.net.URL url = ValidatorValidator.class.getResource(reach);
+        java.net.URL url = ImportValidatorTest.class.getResource(reach);
 
     }
 
